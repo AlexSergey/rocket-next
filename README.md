@@ -1,4 +1,4 @@
-# React Boilerplate 2.0
+# React Boilerplate 3.0
 ## (Redux, React-Router 2.0, webpack, babel, npm, isomorphic, Karma, Mocha, enzyme)
 Hello ! This is test boilerplate of <strong>React + Redux</strong>
 This is little single page application can run isomorphic and include routing, todolist example and fetch data from <a href="https://restcountries.eu/">restcountries</a>
