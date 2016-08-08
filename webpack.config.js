@@ -5,6 +5,7 @@ const packageJson = require('./package.json');
 const webpack     = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin  = require('html-webpack-plugin');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const ExtractTextPlugin  = require("extract-text-webpack-plugin");
 const banner = fs.existsSync('./banner.txt') ?
                fs.readFileSync('./banner.txt', 'utf8') :
@@ -169,7 +170,24 @@ var webpackConfig = {
 
         new ExtractTextPlugin("css/styles.css"),
 
-        new webpack.BannerPlugin(banner)
+        new webpack.BannerPlugin(banner),
+
+        new ImageminPlugin({
+            disable: false,
+            optipng: {
+                optimizationLevel: 3
+            },
+            gifsicle: {
+                optimizationLevel: 1
+            },
+            jpegtran: {
+                progressive: false
+            },
+            svgo: {
+            },
+            pngquant: null, // pngquant is not run unless you pass options here
+            plugins: []
+        })
     ],
     isomorphic: {
         port: config.isomorphic.port
@@ -198,6 +216,7 @@ if (isTest) {
  * */
 if (isTest || isDev) {
     webpackConfig.plugins = removeUnusedPlugins(webpackConfig.plugins, [
+        'ImageminPlugin',
         'DedupePlugin',
         'UglifyJsPlugin',
         'CommonsChunkPlugin',
