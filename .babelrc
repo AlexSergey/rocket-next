@@ -14,7 +14,11 @@
      /**
      Object.assign({}, obj1, obj2)
      */
-     "transform-object-assign"
+     "transform-object-assign",
+     /**
+     * support class and for attributes instead className and htmlFor
+     */
+     "react-html-attrs"
    ],
    "env": {
      "production": {
