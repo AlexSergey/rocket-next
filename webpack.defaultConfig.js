@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path        = require('path');
 const deepAssign  = require('deep-assign');
-const customCofig = fs.existsSync('./webpack.customConfig') ? require('./webpack.customConfig') : {};
+const customCofig = fs.existsSync('./webpack.customConfig.js') ? require('./webpack.customConfig') : {};
 
 const root    = path.resolve(__dirname);
 const src     = path.join(root, 'src');

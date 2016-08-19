@@ -18,9 +18,15 @@ const isSourceMap = !!argv.sourcemaps;
 
 const config = require('./webpack.defaultConfig');
 
-var css  = (isDev || isTest) ? "style!css?sourceMap!postcss"                : ExtractTextPlugin.extract("style", "css!postcss",      {publicPath: '../'});
-var less = (isDev || isTest) ? "style!css?sourceMap!postcss!less?sourceMap" : ExtractTextPlugin.extract("style", "css!postcss!less", {publicPath: '../'});
-var sass = (isDev || isTest) ? "style!css?sourceMap!postcss!sass?sourceMap" : ExtractTextPlugin.extract("style", "css!postcss!sass", {publicPath: '../'});
+var css  = (isDev || isTest) ?
+    "style!css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]?sourceMap!postcss" :
+    ExtractTextPlugin.extract("style", "css!postcss", {publicPath: '../'});
+var less = (isDev || isTest) ?
+    "style!css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]?sourceMap!postcss!less?sourceMap" :
+    ExtractTextPlugin.extract("style", "css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss!less", {publicPath: '../'});
+var sass = (isDev || isTest) ?
+    "style!css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]?sourceMap!postcss!sass?sourceMap" :
+    ExtractTextPlugin.extract("style", "css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss!sass", {publicPath: '../'});
 
 var webpackConfig = {
     // isSourceMap - if we need run in production with source maps, we need set --sourcemaps
@@ -200,6 +206,17 @@ if ((isTest || isDev) && config.webpack.entry.vendors) {
 
 if (isDev || isTest) {
     webpackConfig.output.publicPath = config.webpack.devServer.hostname + ':' + config.webpack.devServer.port + '/';
+    /**
+     * In dev mode or test mode we don't need many plugins. It is speed up work
+     * */
+    webpackConfig.plugins = removeUnusedPlugins(webpackConfig.plugins, [
+        'ImageminPlugin',
+        'DedupePlugin',
+        'UglifyJsPlugin',
+        'CommonsChunkPlugin',
+        'BannerPlugin',
+        'ExtractTextPlugin'
+    ]);
 }
 
 if (isTest) {
@@ -210,21 +227,7 @@ if (isTest) {
         'react/lib/ReactContext': true,
         'react/lib/ExecutionEnvironment': true
     };
-}
-/**
- * In dev mode or test mode we don't need many plugins. It is speed up work
- * */
-if (isTest || isDev) {
-    webpackConfig.plugins = removeUnusedPlugins(webpackConfig.plugins, [
-        'ImageminPlugin',
-        'DedupePlugin',
-        'UglifyJsPlugin',
-        'CommonsChunkPlugin',
-        'BannerPlugin',
-        'ExtractTextPlugin'
-    ]);
-}
-if (isTest) {
+
     webpackConfig.plugins = removeUnusedPlugins(webpackConfig.plugins, [
         'HtmlWebpackPlugin'
     ]);
