@@ -24,6 +24,7 @@ const mapDispatchToProps = (dispatch) => ({
 export default class Todolist extends Component {
     render() {
         return <div className="todo">
+            <h1>TODO list example:</h1>
             <AddTodo
                 addTodo={this.props.addTodo}
             />

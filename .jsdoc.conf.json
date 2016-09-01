@@ -21,5 +21,22 @@
             "keyword": ""
         },
         "linenums": true
+    },
+    "plugins": ["node_modules/jsdoc-babel"],
+    "babel": {
+        "presets": ["es2015", "stage-0", "react"],
+        "plugins": [
+            "transform-decorators-legacy",
+            "kneden",
+            "transform-object-assign"
+        ],
+        "env": {
+            "production": {
+                "plugins": [
+                    "transform-react-constant-elements",
+                    "transform-react-inline-elements"
+                ]
+            }
+        }
     }
 }

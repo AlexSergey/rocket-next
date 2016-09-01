@@ -1,4 +1,5 @@
 import { combineReducers, createStore, compose, applyMiddleware } from 'redux';
+import {middleware} from '../middlewares/empty.middleware';
 
 import { browserHistory } from 'react-router';
 import { routerMiddleware } from 'react-router-redux';
@@ -16,10 +17,6 @@ var reducers = combineReducers(Object.assign({}, {
     crud: crudReducer
 }));
 
-const empty = store => next => action => {
-    return next(action);
-};
-
 const router = routerMiddleware(browserHistory);
 
 var finalCreateStore = compose(
@@ -28,7 +25,7 @@ var finalCreateStore = compose(
         router,
         (isDevelopment && typeof window === 'object') ? require('redux-logger')({
             collapsed: true
-        }) : empty
+        }) : middleware
     ),
     (isDevelopment && typeof window === 'object' && typeof window.devToolsExtension !== 'undefined') ? window.devToolsExtension() : f => f
 )(createStore);

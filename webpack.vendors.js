@@ -1,10 +1,9 @@
 module.exports = [
-    'react',
-    'history',
     'babel-polyfill',
-    'co',
+    'history',
     'isomorphic-fetch',
-    'lodash',
+    'react',
+    'react-customscroll',
     'react-dom',
     'react-redux',
     'react-router',
@@ -12,5 +11,6 @@ module.exports = [
     'redux',
     'redux-actions',
     'redux-promise',
-    'reselect'
+    'reselect',
+    'svg-inline-react'
 ]

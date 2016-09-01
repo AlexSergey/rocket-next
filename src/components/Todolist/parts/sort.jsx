@@ -7,18 +7,12 @@ var filters = [
     {value: 'SHOW_ACTIVE',    title: 'Active'}
 ];
 
-export default class Footer extends Component {
-    render() {
-        return (
-            <ul className="todo-controls">
-                <li>
-                    <Select
-                        currentValue={this.props.filter}
-                        options={filters}
-                        onChange={(filter) => this.props.filterApply(filter)}
-                    />
-                </li>
-            </ul>
-        );
-    }
-}
+const Sorter = (props) => (
+    <Select
+        currentValue={props.filter}
+        options={filters}
+        onChange={(filter) => props.filterApply(filter)}
+    />
+);
+
+export default Sorter;

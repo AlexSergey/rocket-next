@@ -7,11 +7,19 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin  = require('html-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const ExtractTextPlugin  = require("extract-text-webpack-plugin");
+
+//Copyright banner
 const banner = fs.existsSync('./banner.txt') ?
                fs.readFileSync('./banner.txt', 'utf8') :
                '';
 
-const NODE_ENV    = process.env.NODE_ENV;
+// Crossplatform set NODE_ENV
+process.env.NODE_ENV = argv['node-env'];
+
+const NODE_ENV = process.env.NODE_ENV;
+// For set publicPath as localhost:port
+var isLocalMode = argv.localMode;
+
 const isDev       = NODE_ENV === 'development';
 const isTest      = NODE_ENV === 'test';
 const isSourceMap = !!argv.sourcemaps;
@@ -19,13 +27,13 @@ const isSourceMap = !!argv.sourcemaps;
 const config = require('./webpack.defaultConfig');
 
 var css  = (isDev || isTest) ?
-    "style!css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]?sourceMap!postcss" :
+    "style!css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss" :
     ExtractTextPlugin.extract("style", "css!postcss", {publicPath: '../'});
 var less = (isDev || isTest) ?
-    "style!css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]?sourceMap!postcss!less?sourceMap" :
+    "style!css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss!less?sourceMap" :
     ExtractTextPlugin.extract("style", "css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss!less", {publicPath: '../'});
 var sass = (isDev || isTest) ?
-    "style!css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]?sourceMap!postcss!sass?sourceMap" :
+    "style!css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss!sass?sourceMap" :
     ExtractTextPlugin.extract("style", "css?sourceMap&modules&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss!sass", {publicPath: '../'});
 
 var webpackConfig = {
@@ -35,6 +43,7 @@ var webpackConfig = {
     // In dev mode we doesn't need include vendors. We set only app
     entry  : config.webpack.entry,
     output: {
+        publicPath: './',
         path: config.webpack.output.path,
         filename: '[name].js'
     },
@@ -58,11 +67,7 @@ var webpackConfig = {
                 ]
             },
             {
-                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?limit=10000&minetype=application/font-woff"
-            },
-            {
-                test: /\.(ttf|eot|otf|svg)(\?.*$|$)$/,
+                test : /\.(ttf|eot|woff(2)?)(\?[a-z0-9=&.]+)?$/,
                 loader: 'file-loader?name=fonts/[name].[ext]'
             },
             {
@@ -85,7 +90,7 @@ var webpackConfig = {
                 test: /\.(js|jsx)$/,
                 loader: 'babel',
                 exclude: /node_modules/,
-            },
+            }
         ]
     },
     cache: true,
@@ -145,6 +150,13 @@ var webpackConfig = {
         historyApiFallback: true
     },
     plugins: [
+        // NoErrorsPlugin — это стандартный плагин Webpack, который не дает перезаписать скрипты при наличии в них ошибок. Это уберегает от уничтожения старой сборки как следствие нерабочего кода в продакшене. Подключается стандартно в массив с плагинами:
+        new webpack.NoErrorsPlugin(),
+
+        new webpack.optimize.DedupePlugin(),
+        // OccurrenceOrderPlugin — плагин, который минимизирует id, которые используются webpack для подгрузки чанков и прочего. Подключение:
+        new webpack.optimize.OccurrenceOrderPlugin(),
+
         new CleanWebpackPlugin([config.webpack.output.path]),
 
         new webpack.DefinePlugin({
@@ -160,6 +172,7 @@ var webpackConfig = {
 
         new webpack.optimize.UglifyJsPlugin({
             compress: {
+                loops: true,
                 warnings: false,
                 screw_ie8: true,
                 sequences: true,
@@ -169,7 +182,8 @@ var webpackConfig = {
                 unused: true,
                 if_return: true,
                 join_vars: true,
-                drop_console: true
+                drop_console: true,
+                unsafe      : true
             },
             minimize: true
         }),
@@ -204,12 +218,16 @@ if ((isTest || isDev) && config.webpack.entry.vendors) {
     delete config.webpack.entry.vendors;
 }
 
-if (isDev || isTest) {
+if (isLocalMode) {
     webpackConfig.output.publicPath = config.webpack.devServer.hostname + ':' + config.webpack.devServer.port + '/';
+}
+
+if (isDev || isTest) {
     /**
      * In dev mode or test mode we don't need many plugins. It is speed up work
      * */
     webpackConfig.plugins = removeUnusedPlugins(webpackConfig.plugins, [
+        'OccurrenceOrderPlugin',
         'ImageminPlugin',
         'DedupePlugin',
         'UglifyJsPlugin',

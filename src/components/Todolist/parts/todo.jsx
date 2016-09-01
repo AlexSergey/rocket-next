@@ -2,18 +2,26 @@ import React, { Component, PropTypes } from 'react';
 
 export default class Todo extends Component {
     render() {
+        var todoItem = {
+            display: 'block',
+            margin: '-27px 0px 0px 50px'
+        };
+        if (this.props.completed) {
+            todoItem = Object.assign({}, {
+                textDecoration: 'line-through'
+            });
+        }
         return (
-            <li className="list-item-frame">
+            <li className="list-item">
                 <button
-                   className="remove-item btn--warning btn"
-                   onClick={e => {
-                       e.preventDefault();
-                       this.props.onRemove();
-                   }}>
-                    X
+                    onClick={e => {
+                        e.preventDefault();
+                        this.props.onRemove();
+                    }}>
+                    remove
                 </button>
                 <span
-                    className={this.props.completed ? 'done-true list-item' : 'list-item'}
+                    style={todoItem}
                     onClick={this.props.onClick}
                     >
                     <span

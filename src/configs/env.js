@@ -1,5 +1,3 @@
-import find from 'lodash/find';
-
 var defaultRoute = 'http://localhost:8888';
 
 var environments = [
@@ -13,11 +11,8 @@ var currentEnv;
 if (typeof window !== 'undefined') {
     var origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
 
-    currentEnv = find(environments, {
-        client: origin
-    });
+    currentEnv = environments.filter((en) => en.client === origin);
 }
-
-var backend = currentEnv ? currentEnv.backend : defaultRoute;
+var backend = currentEnv.length > 0 ? currentEnv[0].backend : defaultRoute;
 
 export default backend;

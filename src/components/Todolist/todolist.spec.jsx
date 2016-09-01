@@ -1,14 +1,13 @@
 import React from 'react';
 import {expect, renderComponent} from '../../utils/test.helper';
 import Todolist from './container';
+import store from '../../store';
 
 describe('Todolist tests', function() {
-    let component,
-        store;
+    let component;
 
     beforeEach(() => {
         component = renderComponent(Todolist);
-        store     = component.node.store;
     });
 
     it('Todo add', () => {
@@ -18,7 +17,7 @@ describe('Todolist tests', function() {
         };
         store.dispatch(action);
 
-        var text = component.find('.list-item').text();
+        var text = component.find('.list-item > span').text();
 
         expect(store.getState().todolist.todos.length).toEqual(1);
         expect(text).toEqual('test todo item 1');
