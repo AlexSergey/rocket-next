@@ -13,7 +13,7 @@ var config = deepAssign({}, {
         hasVendors: true,
         entry: {
             vendors: require('./webpack.vendors'),
-            app: path.join(src, 'index.jsx')
+            app: [path.join(src, 'index.jsx')]
         },
         output: {
             path: dest

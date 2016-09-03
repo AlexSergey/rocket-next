@@ -21,6 +21,7 @@ const NODE_ENV = process.env.NODE_ENV;
 var isLocalMode = argv.localMode;
 
 const isDev       = NODE_ENV === 'development';
+const isProduction = NODE_ENV === 'production';
 const isTest      = NODE_ENV === 'test';
 const isSourceMap = !!argv.sourcemaps;
 
@@ -143,22 +144,17 @@ var webpackConfig = {
     },
     devServer: {
         port  : config.webpack.devServer.port,
+        hostname: config.webpack.devServer.hostname,
         hot   : true,
         noInfo: true,
         quiet : false,
         lazy  : false,
+        inline: true,
+        colors: true,
+        progress: true,
         historyApiFallback: true
     },
     plugins: [
-        // NoErrorsPlugin — это стандартный плагин Webpack, который не дает перезаписать скрипты при наличии в них ошибок. Это уберегает от уничтожения старой сборки как следствие нерабочего кода в продакшене. Подключается стандартно в массив с плагинами:
-        new webpack.NoErrorsPlugin(),
-
-        new webpack.optimize.DedupePlugin(),
-        // OccurrenceOrderPlugin — плагин, который минимизирует id, которые используются webpack для подгрузки чанков и прочего. Подключение:
-        new webpack.optimize.OccurrenceOrderPlugin(),
-
-        new CleanWebpackPlugin([config.webpack.output.path]),
-
         new webpack.DefinePlugin({
             'process.env': { NODE_ENV: JSON.stringify(NODE_ENV || 'development') }
         }),
@@ -166,7 +162,62 @@ var webpackConfig = {
         new HtmlWebpackPlugin({
             title: packageJson.name,
             template: 'index.ejs'
+        })
+    ],
+    isomorphic: {
+        port: config.isomorphic.port
+    }
+};
+
+if ((isTest || isDev) && config.webpack.entry.vendors) {
+    delete config.webpack.entry.vendors;
+}
+
+if (isLocalMode) {
+    webpackConfig.output.publicPath = config.webpack.devServer.hostname + ':' + config.webpack.devServer.port + '/';
+}
+
+if (isTest) {
+    webpackConfig.externals = {
+        'jsdom': 'window',
+        'cheerio': 'window',
+        'react/addons': true,
+        'react/lib/ReactContext': true,
+        'react/lib/ExecutionEnvironment': true
+    };
+}
+
+if (isProduction) {
+    webpackConfig.plugins.unshift(
+        new CleanWebpackPlugin([config.webpack.output.path]),
+
+        new ExtractTextPlugin("css/styles.css"),
+
+        new ImageminPlugin({
+            disable: false,
+            optipng: {
+                optimizationLevel: 3
+            },
+            gifsicle: {
+                optimizationLevel: 1
+            },
+            jpegtran: {
+                progressive: false
+            },
+            svgo: {
+            },
+            pngquant: null, // pngquant is not run unless you pass options here
+            plugins: []
         }),
+
+        new webpack.BannerPlugin(banner),
+
+        // NoErrorsPlugin — это стандартный плагин Webpack, который не дает перезаписать скрипты при наличии в них ошибок. Это уберегает от уничтожения старой сборки как следствие нерабочего кода в продакшене. Подключается стандартно в массив с плагинами:
+        new webpack.NoErrorsPlugin(),
+
+        new webpack.optimize.DedupePlugin(),
+        // OccurrenceOrderPlugin — плагин, который минимизирует id, которые используются webpack для подгрузки чанков и прочего. Подключение:
+        new webpack.optimize.OccurrenceOrderPlugin(),
 
         new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
 
@@ -186,79 +237,8 @@ var webpackConfig = {
                 unsafe      : true
             },
             minimize: true
-        }),
-
-        new ExtractTextPlugin("css/styles.css"),
-
-        new webpack.BannerPlugin(banner),
-
-        new ImageminPlugin({
-            disable: false,
-            optipng: {
-                optimizationLevel: 3
-            },
-            gifsicle: {
-                optimizationLevel: 1
-            },
-            jpegtran: {
-                progressive: false
-            },
-            svgo: {
-            },
-            pngquant: null, // pngquant is not run unless you pass options here
-            plugins: []
         })
-    ],
-    isomorphic: {
-        port: config.isomorphic.port
-    }
-};
-
-if ((isTest || isDev) && config.webpack.entry.vendors) {
-    delete config.webpack.entry.vendors;
-}
-
-if (isLocalMode) {
-    webpackConfig.output.publicPath = config.webpack.devServer.hostname + ':' + config.webpack.devServer.port + '/';
-}
-
-if (isDev || isTest) {
-    /**
-     * In dev mode or test mode we don't need many plugins. It is speed up work
-     * */
-    webpackConfig.plugins = removeUnusedPlugins(webpackConfig.plugins, [
-        'OccurrenceOrderPlugin',
-        'ImageminPlugin',
-        'DedupePlugin',
-        'UglifyJsPlugin',
-        'CommonsChunkPlugin',
-        'BannerPlugin',
-        'ExtractTextPlugin'
-    ]);
-}
-
-if (isTest) {
-    webpackConfig.externals = {
-        'jsdom': 'window',
-        'cheerio': 'window',
-        'react/addons': true,
-        'react/lib/ReactContext': true,
-        'react/lib/ExecutionEnvironment': true
-    };
-
-    webpackConfig.plugins = removeUnusedPlugins(webpackConfig.plugins, [
-        'HtmlWebpackPlugin'
-    ]);
-}
-
-function removeUnusedPlugins(array, unused) {
-    return webpackConfig.plugins.filter(p => {
-        const name = p.constructor.toString();
-        const fnName = name.match(/^function (.*)\((.*\))/)
-
-        const idx = unused.indexOf(fnName[1]);
-        return idx < 0;
-    });
+    )
 }
 
 module.exports = webpackConfig;
