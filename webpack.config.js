@@ -24,6 +24,7 @@ const isDev       = NODE_ENV === 'development';
 const isProduction = NODE_ENV === 'production';
 const isTest      = NODE_ENV === 'test';
 const isSourceMap = !!argv.sourcemaps;
+const publicPath = argv.publicPath || './';
 
 const config = require('./webpack.defaultConfig');
 
@@ -44,7 +45,7 @@ var webpackConfig = {
     // In dev mode we doesn't need include vendors. We set only app
     entry  : config.webpack.entry,
     output: {
-        publicPath: './',
+        publicPath: publicPath,
         path: config.webpack.output.path,
         filename: '[name].js'
     },

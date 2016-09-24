@@ -4,11 +4,11 @@
   "description": "This is isomorphic boilerplate with react, redux, tests",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "node webpack.dev.server.js --node-env=development --localMode",
-    "development": "webpack --node-env=development",
-    "production": "webpack --node-env=production",
-    "test": "karma start karma.conf.js --node-env=test",
-    "test:watch": "karma start karma.conf.js --watch --node-env=test",
+    "start": "node webpack.dev.server.js --node-env=development --localMode --publicPath=./",
+    "development": "webpack --node-env=development --publicPath=./",
+    "production": "webpack --node-env=production --publicPath=/",
+    "test": "karma start karma.conf.js --node-env=test --publicPath=./",
+    "test:watch": "karma start karma.conf.js --watch --node-env=test --publicPath=./",
     "mocks": "node json.server.js",
     "documentation": "node_modules/.bin/jsdoc src -r -c ./.jsdoc.conf.json -d documentation/ README.md"
   },
