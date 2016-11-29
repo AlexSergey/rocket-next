@@ -121,10 +121,13 @@ var webpackConfig = {
         unsafeCache: true,
         postfixes: [''],
         alias: {
-            '_atoms'  : __dirname + '/src/atoms/',
-            '_configs': __dirname + '/src/atoms/configs',
-            '_env'    : __dirname + '/src/atoms/configs/env.js',
-            '_store'  : __dirname + '/src/atoms/store/index.js'
+            '_atoms'    : __dirname + '/src/views/atoms/',
+            '_configs'  : __dirname + '/src/configs',
+            '_env'      : __dirname + '/src/env.js',
+            '_store'    : __dirname + '/src/store',
+            '_actions'  : __dirname + '/src/actions',
+            '_selectors': __dirname + '/src/selectors',
+            '_reducers' : __dirname + '/src/reducers'
         }
     },
     profile: true,

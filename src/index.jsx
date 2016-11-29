@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import { Router, browserHistory }  from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import routes from './routes';
+import router from './router';
 
 var isDevelopment = process.env.NODE_ENV === 'development' ? true : false,
     root = document.getElementById('root'),
@@ -14,7 +14,7 @@ function getApp() {
     const history = syncHistoryWithStore(browserHistory, store);
 
     return <Provider store={store} key="provider">
-        <Router routes={routes} history={history} />
+        <Router routes={router} history={history} />
     </Provider>;
 }
 
