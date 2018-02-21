@@ -1,4 +1,0 @@
-============
-Rocket 3.0.0
-============
-This is new version

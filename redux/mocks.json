@@ -1,0 +1,19 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "title": "dter",
+      "description": "ert",
+      "id": 2
+    },
+    {
+      "title": "f",
+      "description": "",
+      "id": 3
+    }
+  ]
+}
