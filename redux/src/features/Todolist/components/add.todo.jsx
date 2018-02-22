@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-
-import InputText from '../../../atoms/input-text.jsx';
+import InputText from '../../../components/Input-text.jsx';
 
 export default class AddTodo extends Component {
     render() {

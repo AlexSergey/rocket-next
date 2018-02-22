@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Select from '../../../atoms/select.jsx';
+import Select from '../../../components/Select.jsx';
 
 var filters = [
     {value: 'SHOW_ALL',       title: 'All'},

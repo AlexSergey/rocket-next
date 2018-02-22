@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-import {TODOLIST as TODOLIST_ACTIONS} from '../../../actions';
-import {getVisibleTodos} from '../../../selectors/todolist';
+import {TODOLIST as TODOLIST_ACTIONS} from './actions';
+import {getVisibleTodos} from './selector';
 
 import List    from './components/list.jsx';
 import AddTodo from './components/add.todo.jsx';

@@ -1,6 +1,6 @@
 import React from 'react';
-import Link from '../../../atoms/link';
-import Logo from '../logo';
+import Link from '../../components/Link';
+import Logo from './Logo';
 import CustomScroll from 'react-customscroll';
 
 const Navigation = (props) => (
@@ -11,8 +11,6 @@ const Navigation = (props) => (
                 <li><Link to="/"><span>Index page</span></Link></li>
                 <li><Link to="/todolist"><span>Todo List</span></Link></li>
                 <li><Link to="/crud"><span>CRUD</span></Link></li>
-                {/*<li><Link href="#"><span>Components</span></Link></li>
-                <li><Link href="#"><span>Co</span></Link></li>*/}
             </ul>
         </CustomScroll>
     </nav>

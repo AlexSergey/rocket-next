@@ -1,8 +1,8 @@
 import React from 'react';
-import {renderComponent} from '../../../utils/test.helper';
+import {renderComponent} from '../../utils/test.helper';
 import Todolist from './container';
-import store from '../../../store';
-import {TODOLIST as TODOLIST_ACTIONS} from '../../../actions';
+import store from '../../store';
+import {TODOLIST as TODOLIST_ACTIONS} from './actions';
 
 describe('Todolist tests', function() {
     let component;

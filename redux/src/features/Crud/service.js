@@ -1,4 +1,4 @@
-import backend from '../../../../env';
+import backend from '../../env';
 
 export function getPosts() {
     return fetch(`${backend}/posts`).then((d) => d.json());

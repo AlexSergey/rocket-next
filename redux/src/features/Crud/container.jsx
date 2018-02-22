@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {CRUD as CRUD_ACTIONS} from '../../../actions';
+import {CRUD as CRUD_ACTIONS} from './actions';
 import {connect} from 'react-redux';
 
 const mapStateToProps = (state) => ({

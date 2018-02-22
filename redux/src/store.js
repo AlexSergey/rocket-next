@@ -6,8 +6,8 @@ import { routerMiddleware } from 'react-router-redux';
 import promiseMiddleware from 'redux-promise';
 
 import { routerReducer } from 'react-router-redux';
-import todolistReducer from './reducers/todolist';
-import crudReducer from './reducers/crud';
+import todolistReducer from './features/Todolist/reducer';
+import crudReducer from './features/Crud/reducer';
 import { createLogger } from 'redux-logger';
 
 var isDevelopment = process.env.NODE_ENV === 'development' ? true : false;

@@ -20,7 +20,6 @@
     "enzyme-adapter-react-16": "^1.1.1",
     "expect": "^22.4.0",
     "json-server": "^0.12.1",
-    "react-bsod": "1.0.4",
     "rocket-starter": "git+https://github.com/AlexSergey/rocket-starter.git",
     "rocket-tester": "git+https://github.com/AlexSergey/rocket-tester.git",
     "svg-inline-loader": "0.8.0"

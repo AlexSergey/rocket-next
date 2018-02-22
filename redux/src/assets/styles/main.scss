@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'brandon_grotesquebold';
-  src: url('fonts/brandon_bld-webfont.woff2') format('woff2'),
-  url('fonts/brandon_bld-webfont.woff') format('woff');
+  src: url('../fonts/brandon_bld-webfont.woff2') format('woff2'),
+  url('../fonts/brandon_bld-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
-@import "./fonts/helvetica.scss";
+@import "../fonts/helvetica.scss";
 
 html, body, #root {
   height: 100%;
