@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export default class Todo extends Component {
     render() {
-        var todoItem = this.props.completed ? {
+        let todoItem = this.props.completed ? {
             textDecoration: 'line-through'
         } : {};
 

@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "babel-polyfill": "6.5.0",
-    "history": "^2.0.1",
+    "history": "2.0.1",
     "immutable": "3.8.1",
     "isomorphic-fetch": "2.2.1",
     "prop-types": "15.6.0",

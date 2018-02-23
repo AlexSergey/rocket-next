@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Select from '../../../components/Select.jsx';
 
-var filters = [
+const filters = [
     {value: 'SHOW_ALL',       title: 'All'},
     {value: 'SHOW_COMPLETED', title: 'Completed'},
     {value: 'SHOW_ACTIVE',    title: 'Active'}
