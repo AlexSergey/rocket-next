@@ -37,7 +37,8 @@ const currentFolder = path.basename(process.cwd());
 const webExtractor = new ChunkExtractor({
     statsFile: currentFolder === 'dist' ?
         path.resolve('./stats.json') :
-        path.resolve('./dist/stats.json')
+        path.resolve('./dist/stats.json'),
+    entrypoints: ['index']
 });
 
 router.get('/*', async ctx => {
@@ -78,13 +79,21 @@ router.get('/*', async ctx => {
     htmlSteam.pipe(ctx.res, { end: false });
     await readHTMLStream(htmlSteam);
 
+    let scripts = '';
+
+    if (!!process.env.FRONTEND_HAS_VENDOR) {
+        scripts += '<script  src="/vendor.js" type="text/javascript"></script>\n';
+    }
+
+    scripts += webExtractor.getScriptTags();
+
     ctx.res.write(
         renderFooter(
             reduxState,
             process.env.NODE_ENV === 'development' ?
                 `<style type="text/css">${[...css].join('')}</style>` :
                 `<link rel="stylesheet" type="text/css" href="/styles.css" />`,
-            webExtractor.getScriptTags()
+            scripts
         )
     );
     ctx.res.end();

@@ -9979,10 +9979,10 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rocket-starter@1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/rocket-starter/-/rocket-starter-1.10.0.tgz#7287c4da5209b5d69ea04bd19e31e8a572b7825d"
-  integrity sha512-bvXoJlnQbEuVK1TUYOsxKKEn96mvpiOfDTFMkkJiedgVmeP3OGkHiQ88EIZR5hTBrDPTVjxuyhTrqBvtAhIkZA==
+rocket-starter@1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/rocket-starter/-/rocket-starter-1.11.0.tgz#6227bc319e4540194458bc4768f7096386f74610"
+  integrity sha512-GWgpBeHj/o+eXAX0Svuopp6AXw+s6+0VZtWWfB+3YWBD//iY0t/XPeBLlAFCLJIFz4p8gpMMgXxLBYovRmBGZw==
   dependencies:
     "@babel/core" "7.6.3"
     "@babel/plugin-proposal-class-properties" "7.5.5"

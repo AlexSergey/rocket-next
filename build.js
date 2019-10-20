@@ -6,7 +6,6 @@ isomorphicCompiler([
         compiler: backendCompiler,
         config: {
             src: 'src/server.jsx',
-            debug: true,
             dist: 'dist'
         }
     },
@@ -14,7 +13,26 @@ isomorphicCompiler([
         compiler: frontendCompiler,
         config: {
             src: 'src/client.jsx',
-            debug: true,
+            vendor: [
+                'react',
+                'react-dom',
+                'react-router-dom',
+                'react-meta-tags',
+                'redux',
+                'redux-logger',
+                'react-redux',
+                'immutable',
+                'prop-types',
+                'redux-saga',
+                'connected-react-router',
+                'react-router',
+                'history',
+                'redux-act',
+                'isomorphic-fetch',
+                'object-path',
+                'valid-types',
+                '@loadable/component'
+            ],
             dist: 'public',
             styles: 'styles.css',
             copy: [

@@ -7,6 +7,7 @@ import { Provider as ReduxProvider } from "react-redux";
 import { createBrowserHistory } from 'history';
 import StyleContext from 'isomorphic-style-loader/StyleContext'
 import { isDevelopment } from './utils/mode';
+import { loadableReady } from '@loadable/component';
 
 const insertCss = (...styles) => {
     const removeCss = styles.map(style => style._insertCss());
@@ -21,6 +22,12 @@ const Client = () => <ReduxProvider store={store}>
     </ConnectedRouter>
 </ReduxProvider>;
 
-hydrate(isDevelopment ? <StyleContext.Provider value={{ insertCss }}>
-        <Client />
-    </StyleContext.Provider> : <Client />, document.getElementById( 'root' ) );
+loadableReady(() => {
+    hydrate(isDevelopment ?
+        <StyleContext.Provider value={{ insertCss }}>
+            <Client />
+        </StyleContext.Provider> :
+        <Client />,
+        document.getElementById('root')
+    );
+});
