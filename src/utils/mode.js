@@ -6,4 +6,8 @@ const MODE = {
 
 let isDevelopment = MODE[process.env.NODE_ENV] === 'development';
 
-export { isDevelopment };
+let notProduction = MODE[process.env.NODE_ENV] !== 'production';
+
+let isProduction = MODE[process.env.NODE_ENV] !== 'production';
+
+export { isDevelopment, notProduction, isProduction };

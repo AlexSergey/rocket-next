@@ -41,49 +41,58 @@ const webExtractor = new ChunkExtractor({
     entrypoints: ['index']
 });
 
-router.get('/*', async ctx => {
-    const stream = new Readable();
-    const metaTagsInstance = MetaTagsServer();
-    const context = {};
+function createJSX(ctx, context, metaTagsInstance, reduxState = {}) {
     const history = createMemoryHistory();
-    const store = createStore(history);
+    const { store, rootSaga } = createStore(history, reduxState);
+
     const css = new Set();
     const insertCss = (...styles) => styles.forEach(style => css.add(style._getCss()));
 
-    const jsx = webExtractor.collectChunks(<StyleContext.Provider value={{insertCss}}>
-        <ReduxProvider store={store}>
-            <MetaTagsContext extract = {metaTagsInstance.extract}>
-                <StaticRouter context={context} location={ctx.request.url}>
-                    <App />
-                </StaticRouter>
-            </MetaTagsContext>
-        </ReduxProvider>
-    </StyleContext.Provider>);
+    const jsx = webExtractor.collectChunks(
+        <StyleContext.Provider value={{ insertCss }}>
+            <ReduxProvider store={store}>
+                <MetaTagsContext extract={metaTagsInstance.extract}>
+                    <StaticRouter context={context} location={ctx.request.url}>
+                        <App />
+                    </StaticRouter>
+                </MetaTagsContext>
+            </ReduxProvider>
+        </StyleContext.Provider>
+    );
 
+    return { jsx, store, css, rootSaga };
+}
+
+router.get('/*', async ctx => {
+    let jsx, store, css, appCurrent;
+    const stream = new Readable();
+    const metaTagsInstance = MetaTagsServer();
+    const context = {};
+    appCurrent = createJSX(ctx, context, metaTagsInstance, {});
+    jsx = appCurrent.jsx;
+    store = appCurrent.store;
+    css = appCurrent.css;
     renderToString(jsx);
 
     const meta = metaTagsInstance.renderToString();
 
-    const sagasInProgress = store.sagas.map(saga => saga.toPromise());
-
     store.dispatch(END);
-
-    await Promise.all(sagasInProgress);
+    await appCurrent.rootSaga.toPromise();
 
     const reduxState = store.getState();
+
     stream.push(renderHeader(meta));
     ctx.status = 200;
     ctx.res.write(renderHeader(meta));
+
+    appCurrent = createJSX(ctx, context, metaTagsInstance, reduxState);
+    jsx = appCurrent.jsx;
 
     const htmlSteam = renderToNodeStream(jsx);
     htmlSteam.pipe(ctx.res, { end: false });
     await readHTMLStream(htmlSteam);
 
-    let scripts = '';
-
-    if (!!process.env.FRONTEND_HAS_VENDOR) {
-        scripts += '<script  src="/vendor.js" type="text/javascript"></script>\n';
-    }
+    let scripts = '<script  src="/vendor.js" type="text/javascript"></script>\n';
 
     scripts += webExtractor.getScriptTags();
 

@@ -1,48 +1,40 @@
-import { combineReducers, createStore, compose, applyMiddleware } from 'redux';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
-import { createLogger } from 'redux-logger';
-import { middleware as emptyMiddleware } from './utils/empty.middleware';
 import { isDevelopment } from './utils/mode';
-import isBackend from './utils/isBackend';
 import createSagaMiddleware from 'redux-saga';
-// Reducers
+import { fork } from 'redux-saga/effects'
 import postsReducer from './features/Posts/Posts.reducer';
-// Sagas
-import watchFetchPosts from './features/Posts/Posts.sagas';
+import postSaga from './features/Posts/Posts.sagas';
 
-const createRootReducer = (history) => combineReducers({
-    router: connectRouter(history),
-    postsReducer
-});
-
-const sagaMiddleware = createSagaMiddleware();
-
-const composeEnhancers =
-    (!isBackend() &&
-        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-    compose;
-
-export default (history) => {
-    let store = createStore(
-        createRootReducer(history),
-        composeEnhancers(
-            applyMiddleware(
-                sagaMiddleware,
-                routerMiddleware(history),
-                (isDevelopment && !isBackend()) ? createLogger({
-                    collapsed: true
-                }) : emptyMiddleware
-            )
-        )
-    );
-
-    store.sagas = [
-        watchFetchPosts
-    ].map(saga => {
-        return sagaMiddleware.run(saga);
+export default (history, initState = {}) => {
+    const middleware = getDefaultMiddleware({
+        immutableCheck: true,
+        serializableCheck: false,
+        thunk: false,
     });
 
-    return store;
+    const sagaMiddleware = createSagaMiddleware();
+
+    const store = configureStore({
+        reducer: {
+            router: connectRouter(history),
+            postsReducer
+        },
+        devTools: isDevelopment,
+        middleware: middleware.concat([
+            sagaMiddleware,
+            routerMiddleware(history)
+        ]),
+        preloadedState: initState
+    });
+
+    function* sagas() {
+        yield fork(postSaga);
+    }
+
+    const rootSaga = sagaMiddleware.run(sagas);
+
+    return { store, rootSaga };
 }
 
 

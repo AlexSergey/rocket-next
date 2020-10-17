@@ -13,18 +13,6 @@
 - style.modules
 - SSR (Koa 2)
 
-## Build system
-- [Rocket-Starter](https://github.com/AlexSergey/rocket-starter) - Build system
-
-## Front End
-
-## Testing tool
-
-## Documentation
-
-## Server Side
-
-
 ## The MIT License (MIT)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

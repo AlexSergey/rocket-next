@@ -1,4 +1,4 @@
-import { createAction } from 'redux-act';
+import { createAction } from '@reduxjs/toolkit';
 
 const fetchPosts = createAction('fetch posts from server');
 const requestPosts = createAction('get posts from end point');

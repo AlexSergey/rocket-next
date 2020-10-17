@@ -1,15 +1,12 @@
-import { createReducer } from 'redux-act';
+import { createReducer } from '@reduxjs/toolkit';
 import { requestPosts, requestPostsSuccess, requestPostsError } from './Posts.actions';
-import { fromJS } from 'immutable';
-import getSafetyData from '../../utils/getSafetyData';
 
 export default createReducer({
-    [requestPosts]: state => state,
-    [requestPostsSuccess]: (state, payload) => {
-        return state
-            .set('posts', payload);
+    posts: []
+}, {
+    [requestPosts.type]: state => state,
+    [requestPostsSuccess.type]: (state, { payload = [] }) => {
+        state.posts = payload;
     },
-    [requestPostsError]: state => state,
-}, fromJS({
-    posts: getSafetyData('postsReducer.posts', [])
-}));
+    [requestPostsError.type]: state => state,
+});

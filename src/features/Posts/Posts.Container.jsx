@@ -1,19 +1,17 @@
-import React, { createElement, cloneElement } from 'react';
-import { connect } from 'react-redux';
+import React, { cloneElement } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import onLoad from '../../isomorphic/onLoad';
 import { fetchPosts } from './Posts.actions';
 
 function PostsContainer({ children }) {
-    return createElement(connect(state => ({
-        posts: state.postsReducer.toJS().posts
-    }), dispatch => ({
-        fetchPosts: () => dispatch(fetchPosts())
-    }))(props => {
-        onLoad(() => {
-            props.fetchPosts();
-        });
-        return cloneElement(children, { posts: props.posts });
-    }));
+    const dispatch = useDispatch();
+    const posts = useSelector(state => state.postsReducer.posts);
+
+    onLoad(() => {
+        dispatch(fetchPosts());
+    });
+
+    return cloneElement(children, { posts });
 }
 
 export default PostsContainer;

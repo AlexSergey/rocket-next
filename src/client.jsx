@@ -6,28 +6,26 @@ import createStore from './store';
 import { Provider as ReduxProvider } from "react-redux";
 import { createBrowserHistory } from 'history';
 import StyleContext from 'isomorphic-style-loader/StyleContext'
-import { isDevelopment } from './utils/mode';
 import { loadableReady } from '@loadable/component';
+import { isProduction } from './utils/mode';
 
 const insertCss = (...styles) => {
-    const removeCss = styles.map(style => style._insertCss());
+    const removeCss = isProduction ? [] : styles.map(style => style && typeof style._insertCss === 'function' && style._insertCss());
     return () => removeCss.forEach(dispose => dispose());
 };
-const history = createBrowserHistory();
-const store = createStore(history);
 
-const Client = () => <ReduxProvider store={store}>
-    <ConnectedRouter history={history}>
-        <App />
-    </ConnectedRouter>
-</ReduxProvider>;
+const history = createBrowserHistory();
+const { store } = createStore(history, window.REDUX_DATA);
 
 loadableReady(() => {
-    hydrate(isDevelopment ?
+    hydrate(
         <StyleContext.Provider value={{ insertCss }}>
-            <Client />
-        </StyleContext.Provider> :
-        <Client />,
+            <ReduxProvider store={store}>
+                <ConnectedRouter history={history}>
+                    <App />
+                </ConnectedRouter>
+            </ReduxProvider>
+        </StyleContext.Provider>,
         document.getElementById('root')
     );
 });
